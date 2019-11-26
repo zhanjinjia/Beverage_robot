@@ -28,54 +28,10 @@ Project File Date:  11/26/2019
 *** Using Compiler 'V5.06 update 4 (build 422)', folder: 'F:\IDE\MDK\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Cube_F4_UART2'
 compiling App_RS232_Usart.c...
-..\Src\App_RS232_Usart.c(74): warning:  #223-D: function "osDelay" declared implicitly
-  						osDelay(100);//必须要延�?
-..\Src\App_RS232_Usart.c(96): warning:  #111-D: statement is unreachable
-  						osDelay(100);//必须要延�?
-..\Src\App_RS232_Usart.c(101): warning:  #223-D: function "MB_RTU_Master_RxPkgProcess" declared implicitly
-  							if(MB_RTU_Master_RxPkgProcess(0x001A)==0)
-..\Src\App_RS232_Usart.c(116): warning:  #223-D: function "MB_RTU_Master_RxPkgProcess" declared implicitly
-  							if(MB_RTU_Master_RxPkgProcess(0x001A)==0)
-..\Src\App_RS232_Usart.c(137): warning:  #223-D: function "MB_RTU_Master_ReadHoldingRegister" declared implicitly
-  							MB_RTU_Master_ReadHoldingRegister(UartTxPkg[3], 0x001B,  1);
-..\Src\App_RS232_Usart.c(152): warning:  #111-D: statement is unreachable
-  							UartTxPkg[2]=0x02;
-..\Src\App_RS232_Usart.c(173): warning:  #111-D: statement is unreachable
-  							osDelay(100);//必须要延�?
-..\Src\App_RS232_Usart.c(188): warning:  #111-D: statement is unreachable
-  							osDelay(100);//必须要延�?
-..\Src\App_RS232_Usart.c(203): warning:  #111-D: statement is unreachable
-  							UartTxPkg[2]=0x04;
-..\Src\App_RS232_Usart.c(215): warning:  #223-D: function "MB_RTU_Master_ReadHoldingRegister" declared implicitly
-  							MB_RTU_Master_ReadHoldingRegister(UartTxPkg[3], 0x001C,  4);
-..\Src\App_RS232_Usart.c(219): warning:  #223-D: function "MB_RTU_Master_RxPkgProcess" declared implicitly
-  								if(MB_RTU_Master_RxPkgProcess(0x001C)==0)
-..\Src\App_RS232_Usart.c(263): warning:  #111-D: statement is unreachable
-  							UartTxPkg[12]= Crc8_Calc(UartTxPkg, 12);
-..\Src\App_RS232_Usart.c(266): error:  #127: expected a statement
-  						else
-..\Src\App_RS232_Usart.c(298): warning:  #12-D: parsing restarts here after previous syntax error
-  							osDelay(100);//必须要延�?
-..\Src\App_RS232_Usart.c(313): warning:  #111-D: statement is unreachable
-  							UartTxPkg[2]=0x19;
-..\Src\App_RS232_Usart.c(314): warning:  #550-D: variable "pU8"  was set but never used
-  							uint8_t *pU8;
-..\Src\App_RS232_Usart.c(350): warning:  #223-D: function "MB_RTU_Master_WriteHoldingRegister" declared implicitly
-  						MB_RTU_Master_WriteHoldingRegister(UartTxPkg[3],0x000C, UartTxPkg[4]);
-..\Src\App_RS232_Usart.c(381): warning:  #223-D: function "MB_RTU_Master_ReadHoldingRegister" declared implicitly
-  							MB_RTU_Master_ReadHoldingRegister(UartTxPkg[3], 0x001D,  4);
-..\Src\App_RS232_Usart.c(395): warning:  #111-D: statement is unreachable
-  							UartTxPkg[2]=0x06;
-..\Src\App_RS232_Usart.c(456): warning:  #223-D: function "BEEP_TOGGLE" declared implicitly
-  						BEEP_TOGGLE();
-..\Src\App_RS232_Usart.c(458): warning:  #223-D: function "L01_CE_LOW" declared implicitly
-  						L01_CE_LOW();
-..\Src\App_RS232_Usart.c(461): warning:  #223-D: function "L01_ReadSingleReg" declared implicitly
-  						L01REG_addr = L01_ReadSingleReg(L01REG_RF_CH);
-..\Src\App_RS232_Usart.c(461): error:  #20: identifier "L01REG_RF_CH" is undefined
-  						L01REG_addr = L01_ReadSingleReg(L01REG_RF_CH);
-..\Src\App_RS232_Usart.c: 21 warnings, 2 errors
-"Cube_F4_UART2\Cube_F4_UART2.axf" - 2 Error(s), 21 Warning(s).
+linking...
+Program Size: Code=5178 RO-data=450 RW-data=20 ZI-data=1148  
+FromELF: creating hex file...
+"Cube_F4_UART2\Cube_F4_UART2.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -93,7 +49,6 @@ Package Vendor: ARM
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.0.1
-Target not created.
 Build Time Elapsed:  00:00:03
 </pre>
 </body>

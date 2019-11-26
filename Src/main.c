@@ -79,6 +79,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 	RS232_UartRxPkg_Init();
+	HAL_Delay (100);
   /* USER CODE END Init */
 
   /* Configure the system clock */

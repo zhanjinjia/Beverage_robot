@@ -127,7 +127,7 @@ void Uart_BspWrite(uint8_t UartNo, uint8_t *pu8TxBuf, uint32_t u32WriteBytes)
 	{
 		/* 没用到 */
 		case (1):
-			uart = &huart1;
+//			uart = &huart1;
 			break;
 		/* RS232 */
 		case (2):
@@ -178,14 +178,14 @@ void UartBsp_RxPkg_EndProcess(uint8_t UartNo)
 
 int fputc(int ch, FILE *f)
 {
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xffff);
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xffff);
   return ch;
 }
 
 int fgetc(FILE * f)
 {
   uint8_t ch = 0;
-  HAL_UART_Receive(&huart1,&ch, 1, 0xffff);
+  HAL_UART_Receive(&huart2,&ch, 1, 0xffff);
   return ch;
 }
 

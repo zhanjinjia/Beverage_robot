@@ -19,10 +19,7 @@ typedef struct
   uint8_t flag_PkgIsReady;	/* 数据帧接收完成标志 1：完成 0：未完成 */
 }UART_RX_PKG_t;
 
-
-extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
-
 
 void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
