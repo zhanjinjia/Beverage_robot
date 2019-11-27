@@ -203,9 +203,15 @@ void SysTick_Handler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
-
+	if(__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) )
+	{
+		HAL_UART_RxCpltCallback(&huart2);
+		//r_buff[ii++] = USART1->DR;
+		//USART1->DR = r_buff[ii];
+		__HAL_UART_CLEAR_FLAG(&huart2, UART_FLAG_RXNE);
+	}
   /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
+//  HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */

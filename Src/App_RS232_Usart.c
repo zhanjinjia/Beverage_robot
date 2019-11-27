@@ -22,7 +22,7 @@ void RS232_UartRxPkg_Init(void)
 	}
 }
 
-void Uart1_Respond_CMD_CONN(uint8_t *sendbuf, uint32_t sendlenth)
+void Uart2_Respond_CMD_CONN(uint8_t *sendbuf, uint32_t sendlenth)
 {
 	Uart_BspWrite(RS232_UART_NO,sendbuf ,sendlenth);
 }
@@ -31,6 +31,7 @@ void Uart1_Respond_CMD_CONN(uint8_t *sendbuf, uint32_t sendlenth)
 void Uart2RecvProcess(void)   
 {	
 //	uint8_t L01REG_addr = 0;
+		printf("a\r\n");
     if(RS232_UartRxPkg.flag_PkgIsReady == 1)
     {	
 		uint8_t UartTxPkg[32];
@@ -47,16 +48,18 @@ void Uart2RecvProcess(void)
 		frame_cmd = UartTxPkg[1];
 
 //		HAL_TIM_Base_Start(&htim2);
-		
+		printf("c\r\n");
 		if(frame_head == FRAME_START)/* 帧起始 */
 		{
+			printf("d\r\n");
 			if(Crc8_Calc(UartTxPkg, UartTxCnt) == 0)	/* CRC8校验 正确*/
 			{
+				printf("e\r\n");
 				switch (frame_cmd)
 				{
 					case CMD_QUERY:  
 						UartTxPkg[UartTxCnt-1]= Crc8_Calc(UartTxPkg, UartTxCnt-1);//校验
-						Uart1_Respond_CMD_CONN(UartTxPkg, UartTxCnt);
+						Uart2_Respond_CMD_CONN(UartTxPkg, UartTxCnt);
 						break;
 					
 					case CMD_ARM_CONTROL_RELEASE:

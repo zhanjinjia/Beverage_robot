@@ -102,6 +102,7 @@ int main(void)
   {
     /* USER CODE END WHILE */
 		Uart2RecvProcess();
+		printf("b\r\n");
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
