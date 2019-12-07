@@ -47,10 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint8_t RxBuffer[MAX_REC_LENGTH]={0};
-uint8_t RxFlag=0;
-uint16_t RxCounter=0;
-uint8_t RxTemp[REC_LENGTH]={0};
+
 
 extern osSemaphoreId myBinarySem01Handle;
 
@@ -100,6 +97,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM3_Init();
   MX_USART2_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -195,7 +193,18 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
+	UBaseType_t uxSavedInterruptStatus;
+	
+	if	(htim->Instance==TIM2)
+	{
+		uxSavedInterruptStatus=taskENTER_CRITICAL_FROM_ISR();
+		TimCount++;
+		if(TimCount>0xfe)
+		TimCount=0;
+		//RunLed_TOGGLE;
+		taskEXIT_CRITICAL_FROM_ISR( uxSavedInterruptStatus );
+	
+	}	
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM1) {
     HAL_IncTick();

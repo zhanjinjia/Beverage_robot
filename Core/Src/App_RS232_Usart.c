@@ -1,39 +1,15 @@
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "main.h"
-#include "cmsis_os.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */     
-#include "usart.h"
+
 #include "Global_include.h"
 
 //extern uint8_t TimCount;
 
-//#define RS232_RX_BUFF_SIZE		(32)		/* 串口1    232串口接收BUFF大小 */
-//static uint8_t RS232_RxBuff[RS232_RX_BUFF_SIZE];	/* 串口1  232数据接收BUFF*/
-//static UART_RX_PKG_t RS232_UartRxPkg;
-//uint8_t ButtonPressSuccess=0;
-
-//void RS232_UartRxPkg_Init(void)
-//{
-//	
-//	memset(RS232_RxBuff, 0, RS232_RX_BUFF_SIZE);
-//  RS232_UartRxPkg.pBuff = RS232_RxBuff;
-//	RS232_UartRxPkg.BuffSize = RS232_RX_BUFF_SIZE;
-//	RS232_UartRxPkg.RxCnt = 0;
-//	RS232_UartRxPkg.flag_PkgIsReady = 0;
-//	if (UartBsp_RxPkg_Register(RS232_UART_NO,&RS232_UartRxPkg))
-//	{
-//		RS232_Usart_PRINTF("RS232uart channel Rx package FAIL!\n");
-//	}
-//}
-
-//void Uart2_Respond_CMD_CONN(uint8_t *sendbuf, uint32_t sendlenth)
-//{
-//	Uart_BspWrite(RS232_UART_NO,sendbuf ,sendlenth);
-//}
+uint8_t RxBuffer[MAX_REC_LENGTH]={0};
+uint8_t RxFlag=0;
+uint16_t RxCounter=0;
+uint8_t RxTemp[REC_LENGTH]={0};
 
 
 void Uart_BspWrite(UART_HandleTypeDef* uart, uint8_t *pu8TxBuf, uint32_t u32WriteBytes)
@@ -60,7 +36,9 @@ void Uart2RecvProcess(void)
 		uint8_t temp_light;
 		uint8_t temp_projection;
 		uint8_t temp_valve;
-		
+		uint8_t UartCrcError[1]={0XFF};
+		uint8_t UartHeadError[1]={0XEE};
+		uint8_t UartTimeOut[1]={0XFE};		
 		UartTxCnt = RxCounter;//获取帧长
 		for(i = 0; i < UartTxCnt; i++)
 		{
@@ -68,7 +46,7 @@ void Uart2RecvProcess(void)
 		}
 		frame_head = UartTxPkg[0];
 		frame_cmd = UartTxPkg[1];
-
+		HAL_TIM_Base_Start(&htim2);
 
 //		printf("frame_head:%X\r\n", UartTxPkg[0]);
 //		printf("frame_cmd:%X\r\n", UartTxPkg[1]);
@@ -86,12 +64,13 @@ void Uart2RecvProcess(void)
 //				printf("crc is true\r\n");
 				switch(frame_cmd)
 				{
+					/* 握手 */
 					case CMD_CONN:  
 						UartTxPkg[UartTxCnt-1]= Crc8_Calc(UartTxPkg, UartTxCnt-1);//校验
 					  UartTxPkg[2]=0X00;
 					  Uart_BspWrite(&huart2,UartTxPkg ,UartTxCnt);
 						break;
-				  
+				  /* 心跳包 */
 					case CMD_QUERY:  
 						UartTxPkg[2]=0X08;					
 						UartTxPkg[3]=0X00;
@@ -105,9 +84,25 @@ void Uart2RecvProcess(void)
 					  UartTxPkg[11]= Crc8_Calc(UartTxPkg,11);//校验
 					  Uart_BspWrite(&huart2,UartTxPkg,12);
 						break;
-					  
+					/* 手臂控制+释放 */  
 					case CMD_ARM_CONTROL_RELEASE:
-											
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}					
 						UartTxPkg[2]=0X02;					
 						UartTxPkg[3]=0X80;
 						diff_rel=UartTxPkg[4]-UartTxPkg[4];
@@ -121,6 +116,24 @@ void Uart2RecvProcess(void)
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
 					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
 						osDelay(100);
+						
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}	
 						UartTxPkg[4]=0x07;
 					  if(UartTxPkg[4]<=0x0A)
 						{
@@ -128,11 +141,31 @@ void Uart2RecvProcess(void)
 						}else{
 							UartTxPkg[5]=0X01;
 						}
+						
+						
 						UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
 						HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
 						break;
-					
+						/* 手臂控制+不释放 */
 					case CMD_ARM_CONTROL_NORELEASE:
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}	
+					
 						UartTxPkg[2]=0X02;					
 						UartTxPkg[3]=0X80;
 						diff_norel=UartTxPkg[4]-UartTxPkg[4];
@@ -146,8 +179,26 @@ void Uart2RecvProcess(void)
 					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
 					
 						break;
-					
+					/* 灯光控制 */
 					case CMD_LIGHT_CONTROL:
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}	
+					
 						UartTxPkg[2]=0X01;					
 						UartTxPkg[3]=0X84;
 					  temp_light=0X84;
@@ -161,8 +212,26 @@ void Uart2RecvProcess(void)
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
 					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
 						break;
-															
+					/* 水阀控制 */										
 					case CMD_VALVE_SWITCH_CONTROL:
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}	
+					
 						UartTxPkg[2]=0X01;					
 						UartTxPkg[3]=0X40;
 					  temp_valve=0X40;
@@ -176,8 +245,26 @@ void Uart2RecvProcess(void)
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
 					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
 						break;
-					
+					/* 投影电源控制 */
 					case CMD_PROJECTION_SWITCH_CONTROL:
+						/* 超时处理 */
+					  TimCount=0;
+						while(1)
+						{
+							if(0 == 0)	/* 从机返回数据处理成功 */
+							{
+								break;
+							}	
+							else /*这这里加入超时20*50=1000ms退出判断 */
+							{
+								if(TimCount >= 40)
+								{
+									Uart_BspWrite(&huart2,UartTimeOut,1);
+									break ;								
+								}
+							}	
+						}	
+					
 						UartTxPkg[2]=0X01;					
 						UartTxPkg[3]=0X01;
 					  temp_projection=0X01;
@@ -195,20 +282,18 @@ void Uart2RecvProcess(void)
 					default:
 						break;
 				}
-
+				  HAL_TIM_Base_Stop(&htim2);
 			}	
 			else 
 			{
 //				printf("crc is error\r\n");
-				uint8_t UartCrcError[1]={0XFF};
 				Uart_BspWrite(&huart2,UartCrcError,1);
 			}
 		}
 		else 
 		{
 //			printf("head is error！\r\n");
-				uint8_t UartCrcError[1]={0XEE};
-				Uart_BspWrite(&huart2,UartCrcError,1);
+				Uart_BspWrite(&huart2,UartHeadError,1);
 		}
 		
 		RxFlag=0;

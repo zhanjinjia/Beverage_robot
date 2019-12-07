@@ -51,6 +51,7 @@ cube_freertos_uart\board_bspapi_crc8.o: F:\IDE\MDK\Keil_v5\ARM\ARMCC\Bin\..\incl
 cube_freertos_uart\board_bspapi_crc8.o: F:\IDE\MDK\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/gpio.h
 cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/usart.h
+cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/tim.h
 cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/Board_BspApi_Crc8.h
 cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/App_RS232_Usart.h
 cube_freertos_uart\board_bspapi_crc8.o: ../Core/Inc/Global_include.h

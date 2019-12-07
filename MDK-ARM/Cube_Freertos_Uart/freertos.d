@@ -52,6 +52,7 @@ cube_freertos_uart\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_
 cube_freertos_uart\freertos.o: F:\IDE\MDK\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 cube_freertos_uart\freertos.o: F:\IDE\MDK\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 cube_freertos_uart\freertos.o: ../Core/Inc/gpio.h
+cube_freertos_uart\freertos.o: ../Core/Inc/tim.h
 cube_freertos_uart\freertos.o: ../Core/Inc/Board_BspApi_Crc8.h
 cube_freertos_uart\freertos.o: ../Core/Inc/App_RS232_Usart.h
 cube_freertos_uart\freertos.o: ../Core/Inc/Global_include.h

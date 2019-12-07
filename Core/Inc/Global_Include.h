@@ -24,6 +24,7 @@
 #include "gpio.h"
 //#include "bsp_usart.h"
 #include "usart.h"
+#include "tim.h"
 
 #include "Board_BspApi_Crc8.h"
 //#include "Board_BspApi_Crc16.h"
