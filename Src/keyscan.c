@@ -92,7 +92,7 @@ void KEY_Scan_Right(void)
 			 POWER_4_L;
 			}	
 }
-#elif   1 //共同控制出水
+#elif   0 //共同控制出水
 void KEY_Scan_Left(void)
 {
 		if(0 == DET_1 )//检测到杯子
@@ -132,7 +132,7 @@ void KEY_Scan_Right(void)
 		 POWER_4_L;
 	 }
 }
-#elif   0
+#elif   1
 //只用电容按键
 void KEY_Scan_Left(void)
 {

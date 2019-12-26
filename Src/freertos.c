@@ -159,7 +159,7 @@ void StartTaskRecvProcess(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osSemaphoreWait(myBinarySem01Handle,100);
+    osSemaphoreWait(myBinarySem01Handle,10);//си100╦дн╙10
 		Uart2RecvProcess();
 		osDelay(1);
   }

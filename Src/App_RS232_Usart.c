@@ -17,7 +17,7 @@ void Uart_BspWrite(UART_HandleTypeDef* uart, uint8_t *pu8TxBuf, uint32_t u32Writ
 {  
 	uart = &huart2;
 	USART2->CR1 &= ~0x02;//关闭接收
-	HAL_UART_Transmit(uart, pu8TxBuf, u32WriteBytes, 0xffff);
+	HAL_UART_Transmit(uart, pu8TxBuf, u32WriteBytes, 0x0018);
 	USART2->CR1 |= 0x02;//打开接收	
 }
 
@@ -27,7 +27,7 @@ void Uart2RecvProcess(void)
 {	
 	if(RxFlag==1)
 	{
-//		HAL_UART_Transmit(&huart2,RxBuffer,RxCounter,0xffff);	
+//		HAL_UART_Transmit(&huart2,RxBuffer,RxCounter,0x0018);	
 		uint8_t UartTxPkg[32];
 		uint16_t UartTxCnt = 0;
 		uint8_t frame_head,frame_cmd;
@@ -249,7 +249,7 @@ void Uart2RecvProcess(void)
 							UartTxPkg[5]=0X01;
 						}
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 						osDelay(50);
 						
 						/* 超时处理 */
@@ -279,7 +279,7 @@ void Uart2RecvProcess(void)
 						
 						
 						UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-						HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+						HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 						break;
 						/*** 手臂控制+不释放 ***/
 					case CMD_ARM_CONTROL_NORELEASE:
@@ -311,7 +311,7 @@ void Uart2RecvProcess(void)
 							UartTxPkg[5]=0X01;
 						}
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 					
 						break;
 					/*** 灯光控制 ***/
@@ -359,7 +359,7 @@ void Uart2RecvProcess(void)
 						UartTxPkg[4]=0X00;
 
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 						break;
 						
 					/*** 水阀控制 ***/										
@@ -446,7 +446,7 @@ void Uart2RecvProcess(void)
 //							UartTxPkg[4]=0X01;
 //						}
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 						break;
 						
 					/*** 投影电源控制 ***/
@@ -485,7 +485,7 @@ void Uart2RecvProcess(void)
 						UartTxPkg[4]=0X00;
 
 					  UartTxPkg[UartTxCnt]=Crc8_Calc(UartTxPkg, UartTxCnt);
-					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0xffff);
+					  HAL_UART_Transmit(&huart2,UartTxPkg,UartTxCnt+1,0x0018);
 						break;
 	
 					default:
